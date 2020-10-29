@@ -1,4 +1,83 @@
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+.grid-container {
+    height: 70%;
+}
+
 body {
-  padding: 10px;
-  font-family: sans-serif;
+    padding: 10px;
+    font-family: sans-serif;
+}
+
+.container {
+    margin: 0 auto;
+    border: 3px solid green;
+    min-height: 100%;
+    background: white;
+}
+
+.human {
+    position: relative;
+    top: 55%;
+    left: 50%;
+    height: 15px;
+    width: 15px;
+    text-align: center;
+    font-size: 0;
+    border: 1px solid red;
+    background-color: #bbb;
+    border-radius: 50%;
+    /*display: inline-block;*/
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 0.5fr 1fr;
+    grid-template-rows: 0.75fr 0.75fr 0.75fr 0.75fr 0.75fr;
+    gap: 1px 1px;
+    grid-template-areas:
+    "room-10 main-hallway room-5"
+    "room-9 main-hallway room-4"
+    "room-8 main-hallway room-3"
+    "room-7 main-hallway room-2"
+    "room-6 main-hallway room-1";
+}
+
+.main-hallway { grid-area: main-hallway; }
+
+.room-1 { grid-area: room-1; }
+
+.room-2 { grid-area: room-2; }
+
+.room-3 { grid-area: room-3; }
+
+.room-4 { grid-area: room-4; }
+
+.room-5 { grid-area: room-5; }
+
+.room-6 { grid-area: room-6; }
+
+.room-7 { grid-area: room-7; }
+
+.room-8 { grid-area: room-8; }
+
+.room-9 { grid-area: room-9; }
+
+.room-10 { grid-area: room-10; }
+
+
+/* For presentation only, no need to copy the code below */
+.grid-container * {
+    border: 1px solid red;
+    position: relative;
+}
+
+.grid-container *:after {
+    content:attr(class);
+    position: absolute;
+    top: 0;
+    left: 0;
 }

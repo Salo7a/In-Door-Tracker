@@ -1,25 +1,39 @@
 <head>
-  <title>People_Tracking</title>
+    <title>People_Tracking</title>
 </head>
 
 <body>
-  <h1>Welcome to Meteor!</h1>
+    <header>
+        <h1>People Tracking System</h1>
+    </header>
+    <form class="new-move" autocomplete="off">
+        <label>
+            <input type="text" name="room_number" placeholder="Enter room number" />
+        </label>
+    </form>
 
-  {{> hello}}
-  {{> info}}
+    <br>
+    {{> map}}
 </body>
 
-<template name="hello">
-  <button>Click Me</button>
-  <p>You've pressed the button {{counter}} times.</p>
+<template name="person">
+    <div class="human"></div>
 </template>
 
-<template name="info">
-  <h2>Learn Meteor!</h2>
-  <ul>
-    <li><a href="https://www.meteor.com/try" target="_blank">Do the Tutorial</a></li>
-    <li><a href="http://guide.meteor.com" target="_blank">Follow the Guide</a></li>
-    <li><a href="https://docs.meteor.com" target="_blank">Read the Docs</a></li>
-    <li><a href="https://forums.meteor.com" target="_blank">Discussions</a></li>
-  </ul>
+<template name="map">
+    {{> person}}
+    <div class="grid-container">
+        <div class="main-hallway"></div>
+        <div class="room-1"></div>
+        <div class="room-2"></div>
+        <div class="room-3"></div>
+        <div class="room-4"></div>
+        <div class="room-5"></div>
+        <div class="room-6"></div>
+        <div class="room-7"></div>
+        <div class="room-8"></div>
+        <div class="room-9"></div>
+        <div class="room-10"></div>
+    </div>
 </template>
+
