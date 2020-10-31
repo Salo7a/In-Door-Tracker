@@ -5,12 +5,19 @@
     "start": "meteor run",
     "test": "meteor test --once --driver-package meteortesting:mocha",
     "test-app": "TEST_WATCH=1 meteor test --full-app --driver-package meteortesting:mocha",
-    "visualize": "meteor --production --extra-packages bundle-visualizer"
+    "visualize": "meteor --production --extra-packages bundle-visualizer",
+    "desktop": "meteor-desktop"
   },
   "dependencies": {
     "@babel/runtime": "^7.11.2",
+    "app-builder-lib": "^22.9.1",
+    "bootstrap": "^4.5.3",
+    "electron-builder": "^22.9.1",
+    "electron-packager": "^15.1.0",
+    "firebase": "^7.24.0",
     "jquery": "^3.5.1",
-    "meteor-node-stubs": "^1.0.1"
+    "meteor-node-stubs": "^1.0.1",
+    "popper.js": "^1.16.1"
   },
   "meteor": {
     "mainModule": {
@@ -18,5 +25,9 @@
       "server": "server/main.js"
     },
     "testModule": "tests/main.js"
+  },
+  "devDependencies": {
+    "electron": "6.1.7",
+    "meteor-desktop": "^2.2.5"
   }
 }
