@@ -1,5 +1,5 @@
 #include <ArduinoSort.h>
-
+#include <string.h>
 #include <stdio.h>
 
 #include <ESP8266WiFi.h>
@@ -17,14 +17,23 @@
 // Declare the Firebase Data object in the global scope
 FirebaseData firebaseData;
 
-String wifi_names[] = {"BODY-ALREFAEY 9031", "Baka_kun", "Doctors", "Hosam Salim", "Mhossam", "Monir", "Anter", "Hamada", "Abdo" };
-const char * testarr[] = {"BODY-ALREFAEY 9031", "Baka_kun", "Doctors", "Hosam Salim", "Mhossam", "Monir", "Anter", "Hamada", "Abdo" };
-String ssid_names[] = {"", "", "", "", "", "", "", "", ""};       // SSID names after scanning, not ordered.
-int temp_rssi_values[] = {0, 0, 0, 0, 0, 0, 0, 0, 0};              // RSSI values after scanning, not ordered.
-int rssi_values[] = {0, 0, 0, 0, 0, 0, 0, 0, 0};                   // RSSI values after scanning, ordered with wifi_names.
+//String wifi_names[] = {"BODY-ALREFAEY 9031", "Baka_kun", "Doctors", "Hosam Salim", "Mhossam", "Monir", "Anter", "Hamada", "Abdo" };
+//const char * testarr[] = {"BODY-ALREFAEY 9031", "Baka_kun", "Doctors", "Hosam Salim", "Mhossam", "Monir", "Anter", "Hamada", "Abdo" };
+//String ssid_names[] = {"", "", "", "", "", "", "", "", ""};       // SSID names after scanning, not ordered.
+//int temp_rssi_values[] = {0, 0, 0, 0, 0, 0, 0, 0, 0};              // RSSI values after scanning, not ordered.
+//int rssi_values[] = {0, 0, 0, 0, 0, 0, 0, 0, 0};                   // RSSI values after scanning, ordered with wifi_names.
 
-int s_len = sizeof(wifi_names)/sizeof(wifi_names[0]);
-int k = 0;
+String saved_networks[] = {"Baka_kun", "Doctors", "Hosam Salim", "BODY-ALREFAEY 9031", "Mhossam", "Monir"};
+String scanned_ssids[] = {"", "", "", "", "", ""};
+int rssi_values[] = {0, 0, 0, 0, 0, 0};
+
+int w_len = sizeof(saved_networks)/sizeof(saved_networks[0]);
+int s_len = sizeof(scanned_ssids)/sizeof(scanned_ssids[0]);
+int s_index = 0;          // index for scanned_ssids
+int w_index = 0;          // index for saved_networks
+
+//int s_len = sizeof(wifi_names)/sizeof(wifi_names[0]);
+//int k = 0;
 
 void setup()
 {
@@ -59,10 +68,29 @@ void loop()
 
     Serial.println("Wifi scan ended");
 
-    sortArray(testarr, s_len);
-    for (int i = 0; i < s_len; i++)
+    // Save SSIDs and RSSIs to array
+    for (int i = 0; i < n; ++i)
     {
-        Serial.println(testarr[i]);
+        // Check if the ssid exists in the saved networks
+        s_index = findElement(saved_networks, w_len, WiFi.SSID(i));
+        if (s_index != -1)
+        {
+            scanned_ssids[s_index] = WiFi.SSID(i);
+            rssi_values[s_index] = WiFi.RSSI(i);
+        }
+    }
+
+    // Check if there's a network in saved and not scanned (Error while scanning)
+    // So put it's RSSI = 0 (Take average later)
+    for (int i = 0; i < w_len; i++)
+    {
+        w_index = findElement(scanned_ssids, w_len, saved_networks[i]);
+        // If it is saved network and not scanned -> put rssi = 0
+        if (w_index == -1)
+        {
+            scanned_ssids[i] = saved_networks[i];
+            rssi_values[i] = 0;
+        }
     }
 
     // Displaying the scanned WiFis
@@ -74,24 +102,6 @@ void loop()
     {
         Serial.print(n);
         Serial.println(" networks found");
-
-        // Save SSIDs and RSSIs to array
-        for (int i = 0; i < n; ++i)
-        {
-            ssid_names[i] = WiFi.SSID(i);
-            temp_rssi_values[i] = WiFi.RSSI(i);
-        }
-
-        // Get Index of each wifi and sort rssi
-        for (int i = 0; i < s_len; ++i)
-        {
-            k = getIndex(ssid_names , s_len, wifi_names[i]);
-            rssi_values[i] = temp_rssi_values[k];
-        }
-
-        // Sort SSID names
-        sortArray(ssid_names, s_len);
-
     
         for (int i = 0; i < s_len; ++i)
         {
@@ -99,7 +109,7 @@ void loop()
             Serial.print("(");
             Serial.print(i + 1);
             Serial.print(") ");
-            Serial.print(ssid_names[i]);       // SSID
+            Serial.print(scanned_ssids[i]);       // SSID
             Serial.print("  ");
                                     
             Serial.print(rssi_values[i]);       //Signal strength in dBm  
@@ -108,57 +118,45 @@ void loop()
             delay(20);
         }
 
-        for (int i = 0; i < n; ++i)
+        // Send Data to Firebase
+        for (int i = 0; i < s_len; ++i)
         {
             // Set Attributes in Firebase
-            if (Firebase.setInt(firebaseData,ssid_names[i], rssi_values[i])) {
+            if (Firebase.setInt(firebaseData, scanned_ssids[i], rssi_values[i])) {
                 // Success
                 Serial.println("Set int data success");
             } else {
                 // Failed?, get the error reason from firebaseDate
-                Serial.print("Error in setString, ");
+                Serial.print("Error in setInt, ");
                 Serial.println(firebaseData.errorReason());
             }
-            delay(300);
+            delay(200);
         }
         
     }
     Serial.println("");
   
     // Wait a bit before scanning again
-    delay(3000);
+    delay(5000);
     WiFi.scanDelete();  
     
 }
 
-//// Defining comparator function as per the requirement
-//static int myCompare(const void* a, const void* b)
-//{
-//    // setting up rules for comparison
-//    return strcmp(*(const char**)a, *(const char**)b);
-//}
-//
-//// Function to sort the array
-//void sort_array(const char* arr[], int n)
-//{
-//    // calling qsort function to sort the array
-//    // with the help of Comparator
-//    qsort(arr, n, sizeof(const char*), myCompare);
-//}
 
-// Function to get Index of an element in an array
-int getIndex(String arr[], int n, String val)
+// Function to find element in an array
+// return its index if found and -1 if not
+int findElement(String arr[], int n, String val)
 {
     int indx = -1;
 
     for (int i = 0; i < n; i++)
     {
-        if ( val != String(arr[i])  )
+        // if found -> 0 -> !0 = 1 = True
+        if(val == String(arr[i]))
         {
-            continue;
+            indx = i;
+            break;
         }
-        indx = i;
-        break;
     }
     return indx;
 }

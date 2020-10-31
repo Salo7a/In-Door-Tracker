@@ -6,7 +6,6 @@
 
 String saved_networks[] = {"Baka_kun", "Doctors", "Hosam Salim", "BODY-ALREFAEY 9031", "Mhossam", "Monir"};
 String scanned_ssids[] = {"", "", "", "", "", ""};
-int temp_rssi_values[] = {0, 0, 0, 0, 0, 0};
 int rssi_values[] = {0, 0, 0, 0, 0, 0};
 
 int w_len = sizeof(saved_networks)/sizeof(saved_networks[0]);
@@ -47,10 +46,12 @@ void loop()
         // If it is saved network and not scanned -> put rssi = 0
         if (w_index == -1)
         {
+            scanned_ssids[i] = saved_networks[i];
             rssi_values[i] = 0;
         }
     }
-    
+
+    // Send data to csv
     for (int i = 0; i < s_len; i++)
     {
         Serial.print(rssi_values[i]);
