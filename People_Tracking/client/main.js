@@ -1,4 +1,6 @@
-import { Template } from 'meteor/templating';
+import {Template} from 'meteor/templating';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 import './main.html';
 
 // Load Library
@@ -28,14 +30,14 @@ const room_map = {
   '00': { top: '60%', left: '50%'},
   '01': { top: '43%', left: '50%'},
   '02': { top: '23%', left: '50%'},
-  1: { top: '62%', left: '80%'},
-  2: { top: '45%', left: '80%'},
-  3: { top: '28%', left: '80%'},
-  4: { top: '10%', left: '80%'},
-  5: { top: '62%', left: '20%'},
-  6: { top: '45%', left: '20%'},
-  7: { top: '28%', left: '20%'},
-  8: { top: '10%', left: '20%'},
+  '1': { top: '62%', left: '80%'},
+  '2': { top: '45%', left: '80%'},
+  '3': { top: '28%', left: '80%'},
+  '4': { top: '10%', left: '80%'},
+  '5': { top: '62%', left: '20%'},
+  '6': { top: '45%', left: '20%'},
+  '7': { top: '28%', left: '20%'},
+  '8': { top: '10%', left: '20%'},
 }
 
 Template.body.events({
@@ -50,6 +52,20 @@ Template.body.events({
                 scanned_networks[childSnapshot.key] = childSnapshot.val();
             });
             console.log(scanned_networks);
+
+            // Classify the location based on the scanned networks
+            let location = getLocation(scanned_networks);
+
+            if (scanned_networks['Baka_kun'] < -50)
+            {
+                location = 3;
+            }
+
+            $(".human").css({
+                top: room_map[location]['top'],
+                left: room_map[location]['left']
+            });
+
         });
     },
 });
@@ -74,3 +90,8 @@ Template.body.events({
   },
 });
 
+// Function to apply the ML hypothesis function to get the current room location
+const getLocation = (networks) => {
+    // equation here
+    return {}
+}
