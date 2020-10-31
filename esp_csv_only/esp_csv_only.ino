@@ -4,13 +4,15 @@
 
 #include <ESP8266WiFi.h>
 
-String wifi_names[] = {"Baka_kun", "Doctors", "Hosam Salim", "Mhossam", "Monir", "Anter", "Hamada", "ashraf", "Abdo" };
-String ssid_names[] = {"", "", "", "", "", "", "", "", ""};
-int temp_rssi_values[] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
-int rssi_values[] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
+String saved_networks[] = {"Baka_kun", "Doctors", "Hosam Salim", "BODY-ALREFAEY 9031", "Mhossam", "Monir"};
+String scanned_ssids[] = {"", "", "", "", "", ""};
+int temp_rssi_values[] = {0, 0, 0, 0, 0, 0};
+int rssi_values[] = {0, 0, 0, 0, 0, 0};
 
-int s_len = sizeof(wifi_names)/sizeof(wifi_names[0]);
-int k = 0;
+int w_len = sizeof(saved_networks)/sizeof(saved_networks[0]);
+int s_len = sizeof(scanned_ssids)/sizeof(scanned_ssids[0]);
+int s_index = 0;          // index for scanned_ssids
+int w_index = 0;          // index for saved_networks
 
 void setup()
 {
@@ -22,26 +24,33 @@ void loop()
 {
     // WiFi.scanNetworks will return the number of networks found
     int n = WiFi.scanNetworks();
-    Serial.println(s_len);
-
-    Serial.println(child_name);
 
     Serial.print("DATA,");
 
     // Save SSIDs and RSSIs to array
     for (int i = 0; i < n; ++i)
     {
-        ssid_names[i] = WiFi.SSID(i);
-        temp_rssi_values[i] = WiFi.RSSI(i);
+        // Check if the ssid exists in the saved networks
+        s_index = findElement(saved_networks, w_len, WiFi.SSID(i));
+        if (s_index != -1)
+        {
+            scanned_ssids[s_index] = WiFi.SSID(i);
+            rssi_values[s_index] = WiFi.RSSI(i);
+        }
     }
 
-    // Get Index of each wifi and sort rssi
-    for (int i = 0; i < s_len; ++i)
+    // Check if there's a network in saved and not scanned (Error while scanning)
+    // So put it's RSSI = 0 (Take average later)
+    for (int i = 0; i < w_len; i++)
     {
-        k = getIndex(ssid_names , s_len, wifi_names[i]);
-        rssi_values[i] = temp_rssi_values[k];
+        w_index = findElement(scanned_ssids, w_len, saved_networks[i]);
+        // If it is saved network and not scanned -> put rssi = 0
+        if (w_index == -1)
+        {
+            rssi_values[i] = 0;
+        }
     }
-
+    
     for (int i = 0; i < s_len; i++)
     {
         Serial.print(rssi_values[i]);
@@ -73,19 +82,20 @@ void loop()
 //    qsort(arr, n, sizeof(const char*), myCompare);
 //}
 
-// Function to get Index of an element in an array
-int getIndex(String arr[], int n, String val)
+// Function to find element in an array
+// return its index if found and -1 if not
+int findElement(String arr[], int n, String val)
 {
     int indx = -1;
 
     for (int i = 0; i < n; i++)
     {
-        if ( val != String(arr[i])  )
+        // if found -> 0 -> !0 = 1 = True
+        if(val == String(arr[i]))
         {
-            continue;
+            indx = i;
+            break;
         }
-        indx = i;
-        break;
     }
     return indx;
 }
