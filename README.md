@@ -15,7 +15,7 @@
 <div style="page-break-after: always;"></div>
 
 
-## Installation
+## Packages Installations
 
 npm install --save firebase
 
