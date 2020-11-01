@@ -40,7 +40,7 @@ const room_map = {
 
 Template.body.events({
     'click .connectBtn'(event, instance) {
-        console.log('clicked');
+        console.log('Connect!');
 
         // Get a reference to the database service
         let datapoint = firebase.database().ref();
