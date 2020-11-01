@@ -55,9 +55,9 @@ Template.body.events({
             console.log(rssi_values);
 
             // Classify the location based on the scanned networks
-            let location = getLocation(scanned_networks);
+            let location = getLocation(rssi_values);
 
-            if (scanned_networks['STUDBME2'] < -50)
+            if (rssi_values[3] < -50)
             {
                 location = 3;
             }
