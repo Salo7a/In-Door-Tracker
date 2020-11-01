@@ -24,8 +24,6 @@ let firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
-let scanned_networks = { }
-
 const room_map = {
   '00': { top: '60%', left: '50%'},
   '01': { top: '43%', left: '50%'},
