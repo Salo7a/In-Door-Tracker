@@ -46,17 +46,18 @@ Template.body.events({
 
         // Get a reference to the database service
         let datapoint = firebase.database().ref();
+        let data = datapoint.child("RSSIs");
 
-        datapoint.on('value', function(snapshot) {
-            snapshot.forEach(function(childSnapshot) {
-                scanned_networks[childSnapshot.key] = childSnapshot.val();
-            });
-            console.log(scanned_networks);
+        data.on('value', (snapshot) => {
+            let rssi_values = snapshot.val().split(" ").map(Number);
+            rssi_values.pop();
+
+            console.log(rssi_values);
 
             // Classify the location based on the scanned networks
             let location = getLocation(scanned_networks);
 
-            if (scanned_networks['Baka_kun'] < -50)
+            if (scanned_networks['STUDBME2'] < -50)
             {
                 location = 3;
             }
@@ -67,6 +68,7 @@ Template.body.events({
             });
 
         });
+
     },
 });
 

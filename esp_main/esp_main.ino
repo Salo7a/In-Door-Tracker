@@ -1,4 +1,3 @@
-#include <ArduinoSort.h>
 #include <string.h>
 #include <stdio.h>
 
@@ -11,29 +10,25 @@
 // Configure Firebase Variables
 #define FIREBASE_HOST "tracking-a-person-using-wifi.firebaseio.com"
 #define FIREBASE_AUTH "c9tHc8KtbUUNqEKhBLSCYYvfDexS9Sap0oMMCe5c"
-#define WIFI_SSID "BODY-ALREFAEY 9031"
-#define WIFI_PASSWORD "%rG15399"
+#define WIFI_SSID "STUDBME2"
+#define WIFI_PASSWORD "BME2Stud"
 
 // Declare the Firebase Data object in the global scope
 FirebaseData firebaseData;
 
-//String wifi_names[] = {"BODY-ALREFAEY 9031", "Baka_kun", "Doctors", "Hosam Salim", "Mhossam", "Monir", "Anter", "Hamada", "Abdo" };
-//const char * testarr[] = {"BODY-ALREFAEY 9031", "Baka_kun", "Doctors", "Hosam Salim", "Mhossam", "Monir", "Anter", "Hamada", "Abdo" };
-//String ssid_names[] = {"", "", "", "", "", "", "", "", ""};       // SSID names after scanning, not ordered.
-//int temp_rssi_values[] = {0, 0, 0, 0, 0, 0, 0, 0, 0};              // RSSI values after scanning, not ordered.
-//int rssi_values[] = {0, 0, 0, 0, 0, 0, 0, 0, 0};                   // RSSI values after scanning, ordered with wifi_names.
-
-String saved_networks[] = {"Baka_kun", "Doctors", "Hosam Salim", "BODY-ALREFAEY 9031", "Mhossam", "Monir"};
-String scanned_ssids[] = {"", "", "", "", "", ""};
-int rssi_values[] = {0, 0, 0, 0, 0, 0};
+String saved_networks[] = {"StudBME1", "STUDBME2", "SBME_STAFF3", "SBME_STAFF", "CUFE", "RehabLab", "lab001", "BMEStudentLab3", "CMP_LAB", "CMP_LAB1", "CMP_LAB2"};
+String scanned_ssids[] = {"", "", "", "", "", "", "", "", "", "", ""};
+int rssi_values[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
 int w_len = sizeof(saved_networks)/sizeof(saved_networks[0]);
 int s_len = sizeof(scanned_ssids)/sizeof(scanned_ssids[0]);
 int s_index = 0;          // index for scanned_ssids
 int w_index = 0;          // index for saved_networks
 
-//int s_len = sizeof(wifi_names)/sizeof(wifi_names[0]);
-//int k = 0;
+//String rssi_string;
+char rssi_buffer[30];
+char* outputStrings[11];
+char rssi_characters[30];
 
 void setup()
 {
@@ -118,20 +113,28 @@ void loop()
             delay(20);
         }
 
-        // Send Data to Firebase
-        for (int i = 0; i < s_len; ++i)
+        // Convert array of int to string -> to sent to firebase with setString
+        for (int i = 0 ; i < w_len ; ++i)
         {
-            // Set Attributes in Firebase
-            if (Firebase.setInt(firebaseData, scanned_ssids[i], rssi_values[i])) {
-                // Success
-                Serial.println("Set int data success");
-            } else {
-                // Failed?, get the error reason from firebaseDate
-                Serial.print("Error in setInt, ");
-                Serial.println(firebaseData.errorReason());
-            }
-            delay(200);
+            snprintf(rssi_buffer, 30, "%d ", rssi_values[i]);
+            // check for overrun omitted
+            outputStrings[i] = strdup(rssi_buffer);
+            strcat(rssi_characters, outputStrings[i]);
         }
+
+        // Set Attributes in Firebase
+        if (Firebase.setString(firebaseData, "RSSIs", rssi_characters)) {
+            // Success
+            Serial.println("Seta String data success");
+        } else {
+            // Failed?, get the error reason from firebaseDate
+            Serial.print("Error in setString, ");
+            Serial.println(firebaseData.errorReason());
+        }
+        delay(200);
+
+        // Reset rssi_characters
+        memset(rssi_characters, 0, 30);
         
     }
     Serial.println("");
