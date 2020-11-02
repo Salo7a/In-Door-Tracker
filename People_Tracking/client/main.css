@@ -30,6 +30,7 @@ body {
     border: 1px solid red;
     background-color: #bbb;
     border-radius: 50%;
+    transition: 0.8s linear;
     /*display: inline-block;*/
 }
 
