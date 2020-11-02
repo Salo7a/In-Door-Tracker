@@ -25,17 +25,17 @@ let firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 const room_map = {
-  '00': { top: '60%', left: '50%'},
-  '01': { top: '43%', left: '50%'},
-  '02': { top: '23%', left: '50%'},
+  '4': { top: '60%', left: '50%'},
+  '5': { top: '43%', left: '50%'},
+  '6': { top: '23%', left: '50%'},
   '1': { top: '62%', left: '80%'},
   '2': { top: '45%', left: '80%'},
   '3': { top: '28%', left: '80%'},
-  '4': { top: '10%', left: '80%'},
-  '5': { top: '62%', left: '20%'},
-  '6': { top: '45%', left: '20%'},
+  // '4': { top: '10%', left: '80%'},
+  // '5': { top: '62%', left: '20%'},
+  // '6': { top: '45%', left: '20%'},
   '7': { top: '28%', left: '20%'},
-  '8': { top: '10%', left: '20%'},
+  // '8': { top: '10%', left: '20%'},
 }
 
 Template.body.events({

@@ -11,8 +11,8 @@
 // Configure Firebase Variables
 #define FIREBASE_HOST "tracking-a-person-using-wifi.firebaseio.com"
 #define FIREBASE_AUTH "c9tHc8KtbUUNqEKhBLSCYYvfDexS9Sap0oMMCe5c"
-#define WIFI_SSID "STUDBME2"
-#define WIFI_PASSWORD "BME2Stud"
+#define WIFI_SSID "Refaey"
+#define WIFI_PASSWORD "Body@12345"
 
 // Declare the Firebase Data object in the global scope
 FirebaseData firebaseData;
