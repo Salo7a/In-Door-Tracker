@@ -44,29 +44,18 @@ Template.body.events({
 
         // Get a reference to the database service
         let datapoint = firebase.database().ref();
-        let data = datapoint.child("RSSIs");
+        let data = datapoint.child("location");
 
         data.on('value', (snapshot) => {
-            let rssi_values = snapshot.val().split(" ").map(Number);
-            rssi_values.pop();
+            let location = snapshot.val();
+            console.log(location);
 
-            console.log(rssi_values);
-
-            // Classify the location based on the scanned networks
-            let location = getLocation(rssi_values);
-
-            if (rssi_values[3] < -50)
-            {
-                location = 3;
-            }
-
+            // Change human location
             $(".human").css({
                 top: room_map[location]['top'],
                 left: room_map[location]['left']
             });
-
         });
-
     },
 });
 
@@ -89,9 +78,3 @@ Template.body.events({
     target.room_number.value = '';
   },
 });
-
-// Function to apply the ML hypothesis function to get the current room location
-const getLocation = (networks) => {
-    // equation here
-    return {}
-}

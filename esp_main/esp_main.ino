@@ -7,22 +7,19 @@
 #include <FirebaseESP8266HTTPClient.h>
 #include <FirebaseFS.h>
 #include <FirebaseJson.h>
-#include "model.h"
 
 // Configure Firebase Variables
 #define FIREBASE_HOST "tracking-a-person-using-wifi.firebaseio.com"
 #define FIREBASE_AUTH "c9tHc8KtbUUNqEKhBLSCYYvfDexS9Sap0oMMCe5c"
-#define WIFI_SSID "StudBME1"
-#define WIFI_PASSWORD "BME1Stud"
+#define WIFI_SSID "STUDBME2"
+#define WIFI_PASSWORD "BME2Stud"
 
 // Declare the Firebase Data object in the global scope
 FirebaseData firebaseData;
 
 String saved_networks[] = {"StudBME1", "STUDBME2", "SBME_STAFF3", "SBME_STAFF", "CUFE", "RehabLab", "lab001", "CMP_LAB1", "CMP_LAB2"};
 String scanned_ssids[9];
-//int rssi_values[9];
-float rssi_values[9];
-
+int rssi_values[9];
 
 int w_len = sizeof(saved_networks)/sizeof(saved_networks[0]);
 int s_len = sizeof(scanned_ssids)/sizeof(scanned_ssids[0]);
@@ -117,8 +114,6 @@ void loop()
             delay(20);
         }
 
-        Serial.println(classIdxToName(predict(rssi_values)));
-
         // Convert array of int to string -> to sent to firebase with setString
         for (int i = 0 ; i < w_len ; ++i)
         {
@@ -146,7 +141,7 @@ void loop()
     Serial.println("");
   
     // Wait a bit before scanning again
-    delay(5000);
+    delay(1000);
     WiFi.scanDelete();  
     
 }
