@@ -17,9 +17,9 @@
 // Declare the Firebase Data object in the global scope
 FirebaseData firebaseData;
 
-String saved_networks[] = {"StudBME1", "STUDBME2", "SBME_STAFF3", "SBME_STAFF", "CUFE", "RehabLab", "lab001", "BMEStudentLab3", "CMP_LAB", "CMP_LAB1", "CMP_LAB2"};
-String scanned_ssids[] = {"", "", "", "", "", "", "", "", "", "", ""};
-int rssi_values[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+String saved_networks[] = {"StudBME1", "STUDBME2", "SBME_STAFF3", "SBME_STAFF", "CUFE", "RehabLab", "lab001", "CMP_LAB1", "CMP_LAB2"};
+String scanned_ssids[9];
+int rssi_values[9];
 
 int w_len = sizeof(saved_networks)/sizeof(saved_networks[0]);
 int s_len = sizeof(scanned_ssids)/sizeof(scanned_ssids[0]);
@@ -141,7 +141,7 @@ void loop()
     Serial.println("");
   
     // Wait a bit before scanning again
-    delay(5000);
+    delay(1000);
     WiFi.scanDelete();  
     
 }
