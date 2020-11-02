@@ -6,6 +6,7 @@ import sys
 
 
 # model file name 
+# filename = 'model.joblib'
 filename = sys.argv[1]
 
 # Load classifier
@@ -15,7 +16,7 @@ clf = load(filename)
 vals = [float(i) for i in sys.argv[2:]]
 
 # Print predicted class to console 
-# print(clf.predict([vals]))
+print(clf.predict([vals]))
 
 def predict(vals, filename):
     clf = load(filename)

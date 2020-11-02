@@ -16,3 +16,8 @@ python.stdout.on('data', function (data) {
 // // send data to browser
 // res.send(dataToSend)
 // });
+const fs = require('fs');
+const jpickle = require('jpickle');
+const binary = fs.readFileSync('model2.dat', 'binary');
+const data = jpickle.loads(binary)
+console.log(data)
