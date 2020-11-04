@@ -25,22 +25,26 @@ let firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 const room_map = {
-  '4': { top: '60%', left: '50%'},
+  '1': { top: '77%', left: '73%'},
+  '2': { top: '47%', left: '73%'},
+  '3': { top: '14%', left: '73%'},
+  '4': { top: '75%', left: '50%'},
   '5': { top: '43%', left: '50%'},
-  '6': { top: '23%', left: '50%'},
-  '1': { top: '62%', left: '80%'},
-  '2': { top: '45%', left: '80%'},
-  '3': { top: '28%', left: '80%'},
+  '6': { top: '12%', left: '50%'},
+  '7': { top: '95%', left: '50%'},
   // '4': { top: '10%', left: '80%'},
   // '5': { top: '62%', left: '20%'},
   // '6': { top: '45%', left: '20%'},
-  '7': { top: '28%', left: '20%'},
   // '8': { top: '10%', left: '20%'},
 }
+
 
 Template.body.events({
     'click .connectBtn'(event, instance) {
         console.log('Connect!');
+
+        let human = document.getElementsByClassName("human")[1];
+        console.log(human);
 
         // Get a reference to the database service
         let datapoint = firebase.database().ref();

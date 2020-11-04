@@ -1,40 +1,72 @@
 <head>
-    <title>People_Tracking</title>
+    <title>People Tracking System</title>
 </head>
 
 <body>
-    <header>
-        <h1>People Tracking System</h1>
-    </header>
-    <form class="new-move" autocomplete="off">
-        <label>
-            <input type="text" name="room_number" placeholder="Enter room number" />
-        </label>
-    </form>
-    <button style="margin-left: auto; margin-right: auto; margin-top:10px;" class="btn btn-success connectBtn">Connect</button>
+    <div class="container">
+        <header>
+            <h1>People Tracking System in SBME' 2nd Floor</h1>
+        </header>
+        <form class="new-move" autocomplete="off">
+            <label>
+                <input type="text" name="room_number" placeholder="Enter room number" />
+            </label>
+        </form>
+        <button style="margin-left: auto; margin-right: auto; margin-top:10px;" class="btn btn-success connectBtn">Connect</button>    
+        {{> map}}
+    </div>
 
-    <br>
-    {{> map}}
 </body>
 
 <template name="person">
-    <div class="human"></div>
+    <div class="human animated css"></div>
+</template>
+
+<!-- Room Left Border Template -->
+<template name="borderLeft">
+    <div id="borderLeftDown"></div>
+    <div id="borderLeftUp"></div>
+</template>
+
+<!-- Room Right Border Template -->
+<template name="borderRight">
+    <div id="borderRightDown"></div>
+    <div id="borderRightUp"></div>
 </template>
 
 <template name="map">
     {{> person}}
 
-    <div class="grid-container">
-        <div class="room-1"></div>
-        <div class="room-2"></div>
-        <div class="room-3"></div>
-        <div class="room-4"></div>
-        <div class="room-5"></div>
-        <div class="room-6"></div>
-        <div class="room-7"></div>
-        <div class="room-8"></div>
+    <!-- <div class="grid-container">
+        <div class="room-1">{{> borderLeft}}</div>
+        <div class="room-2">{{> borderLeft}}</div>
+        <div class="room-3">{{> borderLeft}}</div>
+        <div class="room-4">{{> borderLeft}}</div>
+        <div class="room-5">{{> borderRight}}</div>
+        <div class="room-6">{{> borderRight}}</div>
+        <div class="room-7">{{> borderRight}}</div>
+        <div class="room-8">{{> borderRight}}</div>
         <div class="hallway2"></div>
         <div class="hallway1"></div>
+    </div> -->
+
+    <div class="grid-container">
+        <div class="TA">{{> borderLeft}}</div>
+        <div class="Net-Lab">{{> borderLeft}}</div>
+        <div class="Elec-Lab">{{> borderLeft}}</div>
+        <div class="Null1"></div>
+        <div class="Null2"></div>
+        <div class="Lab1">{{> borderRight}}</div>
+        <div class="Lab2">{{> borderRight}}</div>
+        <div class="Null3"></div>
+        <div class="Lab3">{{> borderRight}}</div>
+        <div class="main-hallway"></div>
+        <div class="TS">{{> borderLeft}}</div>
+        <div class="hallway-4"></div>
+        <div class="hallway-5"></div>
+        <div class="hallway-6"></div>
+        <div class="hallway-6"></div>
     </div>
+
 </template>
 
