@@ -55,13 +55,13 @@ void loop()
     }
     
     Serial.println("WiFi scan started");
+  
     // WiFi.scanNetworks will return the number of networks found
     n = WiFi.scanNetworks();
 
     Serial.println("Wifi scan ended");
 
     saveValues();
-    sentToFirebase();
   
     // Displaying the scanned WiFis
     if (n == 0)
@@ -81,7 +81,7 @@ void loop()
     Serial.println("");
   
     // Wait a bit before scanning again
-    delay(500);
+    delay(2000);
     WiFi.scanDelete();      
 }
 
@@ -136,19 +136,19 @@ void printToSerial()
   Serial.println(" networks found");
         
   for (int i = 0; i < s_len; ++i)
-        {
-            // Print SSID and RSSI for each network found
-            Serial.print("(");
-            Serial.print(i + 1);
-            Serial.print(") ");
-            Serial.print(scanned_ssids[i]);       // SSID
-            Serial.print("  ");
-                                    
-            Serial.print(rssi_values[i]);       //Signal strength in dBm  
-            Serial.println(" dBm");
-      
-            delay(20);
-        }  
+  {
+      // Print SSID and RSSI for each network found
+      Serial.print("(");
+      Serial.print(i + 1);
+      Serial.print(") ");
+      Serial.print(scanned_ssids[i]);       // SSID
+      Serial.print("  ");
+                              
+      Serial.print(rssi_values[i]);       //Signal strength in dBm  
+      Serial.println(" dBm");
+
+      delay(20);
+  }  
 }
 
 void convertIntToString()
