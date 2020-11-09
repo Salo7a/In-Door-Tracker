@@ -11,20 +11,21 @@
 // Configure Firebase Variables
 #define FIREBASE_HOST "tracking-a-person-using-wifi.firebaseio.com"
 #define FIREBASE_AUTH "c9tHc8KtbUUNqEKhBLSCYYvfDexS9Sap0oMMCe5c"
-#define WIFI_SSID "Refaey"
-#define WIFI_PASSWORD "Body@12345"
+#define WIFI_SSID "STUDBME2"
+#define WIFI_PASSWORD "BME2Stud"
 
 // Declare the Firebase Data object in the global scope
 FirebaseData firebaseData;
 
-String saved_networks[] = {"StudBME1", "STUDBME2", "SBME_STAFF3", "SBME_STAFF", "CUFE", "RehabLab", "lab001", "CMP_LAB1", "CMP_LAB2"};
-String scanned_ssids[9];
-int rssi_values[9];
+String saved_networks[] = {"StudBME1", "STUDBME2", "SBME_STAFF3", "SBME_STAFF", "RehabLab", "lab001", "CMP_LAB1", "CMP_LAB2"};
+String scanned_ssids[8];
+int rssi_values[8];
 
 int w_len = sizeof(saved_networks)/sizeof(saved_networks[0]);
 int s_len = sizeof(scanned_ssids)/sizeof(scanned_ssids[0]);
 int s_index = 0;          // index for scanned_ssids
 int w_index = 0;          // index for saved_networks
+int n = 0;                // number of scanned networks
 
 //String rssi_string;
 char rssi_buffer[30];
@@ -36,17 +37,7 @@ void setup()
     // Debug console
     Serial.begin(115200);
   
-    // connect to wifi.
-    WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
-    Serial.print("connecting");
-    
-    while (WiFi.status() != WL_CONNECTED)
-    {
-        Serial.print(".");
-        delay(500);
-    }
-    Serial.println();
-    Serial.print("connected: ");
+    connectToWiFi();
     Serial.println(WiFi.localIP());
     
     Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH);
@@ -57,14 +48,63 @@ void setup()
 
 void loop()
 {
+    // Check that wiFi is still connected
+    if(WiFi.status() != WL_CONNECTED)
+    {
+      connectToWiFi();
+    }
+    
     Serial.println("WiFi scan started");
   
     // WiFi.scanNetworks will return the number of networks found
-    int n = WiFi.scanNetworks();
+    n = WiFi.scanNetworks();
 
     Serial.println("Wifi scan ended");
 
-    // Save SSIDs and RSSIs to array
+    saveValues();
+    sentToFirebase();
+  
+    // Displaying the scanned WiFis
+    if (n == 0)
+    {
+        Serial.println("no networks found");
+    }
+    else
+    {
+        printToSerial();
+        convertIntToString();
+        sentToFirebase();
+
+        // Reset rssi_characters
+        memset(rssi_characters, 0, 30);
+        
+    }
+    Serial.println("");
+  
+    // Wait a bit before scanning again
+    delay(500);
+    WiFi.scanDelete();      
+}
+
+
+void connectToWiFi()
+{
+  // connect to wifi.
+    WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+    Serial.print("connecting");
+    
+    while (WiFi.status() != WL_CONNECTED)
+    {
+        Serial.print(".");
+        delay(100);
+    }
+    Serial.println();
+    Serial.print("connected: ");
+}
+
+void saveValues()
+{
+  // Save SSIDs and RSSIs to array
     for (int i = 0; i < n; ++i)
     {
         // Check if the ssid exists in the saved networks
@@ -88,18 +128,15 @@ void loop()
             rssi_values[i] = 0;
         }
     }
+}
 
-    // Displaying the scanned WiFis
-    if (n == 0)
-    {
-        Serial.println("no networks found");
-    }
-    else
-    {
-        Serial.print(n);
-        Serial.println(" networks found");
-    
-        for (int i = 0; i < s_len; ++i)
+
+void printToSerial()
+{
+  Serial.print(n);
+  Serial.println(" networks found");
+        
+  for (int i = 0; i < s_len; ++i)
         {
             // Print SSID and RSSI for each network found
             Serial.print("(");
@@ -112,38 +149,33 @@ void loop()
             Serial.println(" dBm");
       
             delay(20);
-        }
+        }  
+}
 
-        // Convert array of int to string -> to sent to firebase with setString
-        for (int i = 0 ; i < w_len ; ++i)
-        {
-            snprintf(rssi_buffer, 30, "%d ", rssi_values[i]);
-            // check for overrun omitted
-            outputStrings[i] = strdup(rssi_buffer);
-            strcat(rssi_characters, outputStrings[i]);
-        }
+void convertIntToString()
+{
+    // Convert array of int to string -> to sent to firebase with setString
+    for (int i = 0 ; i < w_len ; ++i)
+    {
+        snprintf(rssi_buffer, 30, "%d ", rssi_values[i]);
+        // check for overrun omitted
+        outputStrings[i] = strdup(rssi_buffer);
+        strcat(rssi_characters, outputStrings[i]);
+    }  
+}
 
-        // Set Attributes in Firebase
-        if (Firebase.setString(firebaseData, "RSSIs", rssi_characters)) {
-            // Success
-            Serial.println("Seta String data success");
-        } else {
-            // Failed?, get the error reason from firebaseDate
-            Serial.print("Error in setString, ");
-            Serial.println(firebaseData.errorReason());
-        }
-        delay(200);
-
-        // Reset rssi_characters
-        memset(rssi_characters, 0, 30);
-        
+void sentToFirebase()
+{
+  // Set Attributes in Firebase
+    if (Firebase.setString(firebaseData, "RSSIs", rssi_characters)) {
+        // Success
+        Serial.println("Seta String data success");
+    } else {
+        // Failed?, get the error reason from firebaseDate
+        Serial.print("Error in setString, ");
+        Serial.println(firebaseData.errorReason());
     }
-    Serial.println("");
-  
-    // Wait a bit before scanning again
-    delay(1000);
-    WiFi.scanDelete();  
-    
+    delay(100);
 }
 
 
