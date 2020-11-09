@@ -1,0 +1,11 @@
+{
+  "name": "child",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node index"
+  },
+  "dependencies": {
+    "firebase": "^8.0.1"
+  }
+}

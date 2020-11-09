@@ -55,7 +55,6 @@ void loop()
     }
     
     Serial.println("WiFi scan started");
-  
     // WiFi.scanNetworks will return the number of networks found
     n = WiFi.scanNetworks();
 
