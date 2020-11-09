@@ -11,8 +11,8 @@
 // Configure Firebase Variables
 #define FIREBASE_HOST "tracking-a-person-using-wifi.firebaseio.com"
 #define FIREBASE_AUTH "c9tHc8KtbUUNqEKhBLSCYYvfDexS9Sap0oMMCe5c"
-#define WIFI_SSID "Refaey"
-#define WIFI_PASSWORD "Body@12345"
+#define WIFI_SSID "realme C3"
+#define WIFI_PASSWORD "12345678"
 
 // Declare the Firebase Data object in the global scope
 FirebaseData firebaseData;
@@ -57,8 +57,18 @@ void setup()
 
 void loop()
 {
+    
+    if (WiFi.status() != WL_CONNECTED) {
+        WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+        Serial.print("connecting");
+        
+        while (WiFi.status() != WL_CONNECTED)
+        {
+            Serial.print(".");
+            delay(500);
+        }
+    }
     Serial.println("WiFi scan started");
-  
     // WiFi.scanNetworks will return the number of networks found
     int n = WiFi.scanNetworks();
 
