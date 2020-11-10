@@ -2,6 +2,7 @@ import {Template} from 'meteor/templating';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import './main.html';
+import snap from "app-builder-lib/out/targets/snap";
 
 // Load Library
 const firebase = require("firebase/app");
@@ -38,27 +39,46 @@ const room_map = {
   // '8': { top: '10%', left: '20%'},
 }
 
+let rooms = [1, 2, 3];
+let location;
+let tempRoom;
 
 Template.body.events({
     'click .connectBtn'(event, instance) {
         console.log('Connect!');
 
         let human = document.getElementsByClassName("human")[1];
-        console.log(human);
 
         // Get a reference to the database service
         let datapoint = firebase.database().ref();
         let data = datapoint.child("location");
 
-        data.on('value', (snapshot) => {
-            let location = snapshot.val();
-            console.log(location);
-
-            // Change human location
-            $(".human").css({
-                top: room_map[location]['top'],
-                left: room_map[location]['left']
+        // Get initial room
+        datapoint.once('value',  function(snapshot) {
+            snapshot.forEach(function(childSnapshot) {
+                if (childSnapshot.key === 'location')
+                {
+                    location = childSnapshot.val();
+                    console.log("location", location);
+                }
             });
+        });
+
+        data.on('value', (snapshot) => {
+            tempRoom = snapshot.val();
+            console.log("tempRoom ", tempRoom);
+
+            // Check if old location and new location in rooms
+            if (rooms.includes(location)) {
+                if (!rooms.includes(tempRoom)) {
+                    location = tempRoom;
+                    updateLocation(location);
+                }
+            }
+            else {
+                location = tempRoom;
+                updateLocation(location);
+            }
         });
     },
 });
@@ -82,3 +102,10 @@ Template.body.events({
     target.room_number.value = '';
   },
 });
+
+const updateLocation = (loc) => {
+    $(".human").css({
+        top: room_map[loc]['top'],
+        left: room_map[loc]['left']
+    });
+}
