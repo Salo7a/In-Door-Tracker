@@ -47,7 +47,7 @@ data.on('value', async (snapshot) => {
 
     // Classify the location based on the scanned networks
     let location = await getLocation(rssi_values);
-    console.log(location)
+    // console.log(location)
     // locsnap.set(8);
     
 

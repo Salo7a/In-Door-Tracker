@@ -6,6 +6,7 @@
     "start": "node index"
   },
   "dependencies": {
+    "delay": "^4.4.0",
     "firebase": "^8.0.1"
   }
 }
