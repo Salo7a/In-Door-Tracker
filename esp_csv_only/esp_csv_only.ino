@@ -4,9 +4,9 @@
 
 #include <ESP8266WiFi.h>
 
-String saved_networks[] = {"StudBME1", "STUDBME2", "SBME_STAFF3", "SBME_STAFF", "CUFE", "RehabLab", "lab001", "BMEStudentLab3", "CMP_LAB", "CMP_LAB1", "CMP_LAB2"};
-String scanned_ssids[11];
-int rssi_values[11];
+String saved_networks[] = {"StudBME1", "STUDBME2", "SBME_STAFF3", "SBME_STAFF", "CUFE", "RehabLab", "lab001", "CMP_LAB1", "CMP_LAB2"};
+String scanned_ssids[9];
+int rssi_values[9];
 
 int w_len = sizeof(saved_networks)/sizeof(saved_networks[0]);
 int s_len = sizeof(scanned_ssids)/sizeof(scanned_ssids[0]);
@@ -63,7 +63,7 @@ void loop()
     Serial.println();
     
     // Wait a bit before scanning again
-    delay(500);
+    delay(200);
     WiFi.scanDelete();  
 }
 
